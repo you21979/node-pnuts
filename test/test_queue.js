@@ -2,18 +2,18 @@
 //  １０万件以上の削除が遅い
 //
 var PNuts = require('..'),
-    Hash = PNuts.collection.HashMap;
+    Queue = PNuts.collection.Queue;
 
 var assert = require('assert');
 
 [
 function(MAX){
     // メモリ確保テスト
-    var h = new Hash();
+    var q = new Queue();
     var TID = MAX+':ALLOC';
     console.time(TID);
     for(var i=0;i<MAX;++i){
-        h.set(i,'hoge');
+        q.enqueue("aaaa");
     }
     console.timeEnd(TID);
 
@@ -21,21 +21,20 @@ function(MAX){
     var TID = MAX+':SCAN';
     console.time(TID);
     var i = 0;
-    h.scan(function(key,value){                                                                                                                  
-        assert(i.toString() === key);
-        assert(value === 'hoge');
-        ++i;
+    q.scan(function(key,value){
+        ++i
         return true;
     });
-    assert(i === MAX);
+    assert(i === q.size());
     console.timeEnd(TID);
 
-    // メモリ削除テスト
     var TID = MAX+':DELETE';
     console.time(TID);
+    var x = null;
     for(var i=0;i<MAX;++i){
-        h.remove(i);
+        x = q.dequeue();
     }
+    assert(q.size() === 0);
     console.timeEnd(TID);
 }
 ].forEach(function(fnc){
@@ -46,4 +45,3 @@ function(MAX){
         console.timeEnd(TID);
     });
 });
-
