@@ -3,14 +3,42 @@ var PNuts = require('..'),
 
 var assert = require('assert');
 
+var MyData = function(){
+    this.hoge = 0; 
+    this.fuga = '';
+    this.piyo = [];
+};
+
 var Pack = Binary.Serializer.extends({
     initialize : function(maxsize){
         Binary.Serializer.call(this,maxsize);
+    },
+    push_mydata : function(data){
+        if(data instanceof MyData){
+            this.push_int16(data.hoge);
+            this.push_string(data.fuga);
+            var len = data.piyo.length;
+            this.push_int16(len);
+            for(var i = 0; i<len; ++i){
+                this.push_int8(data.piyo[i]);
+            }
+        }
     },
 });
 var Unpack = Binary.Deserializer.extends({
     initialize : function(buffer){
         Binary.Deserializer.call(this,buffer);
+    },
+    pop_mydata : function(){
+        var w = new MyData();
+        w.hoge = this.pop_int16();
+        w.fuga = this.pop_string();
+        var len = this.pop_int16(len);
+        w.piyo = new Array(len);
+        for(var i = 0; i<len; ++i){
+            w.piyo[i] = this.pop_int8();
+        }
+        return w;
     },
 });
 [
@@ -22,12 +50,36 @@ function(MAX){
         p.push_int32(i);
     }
     console.timeEnd(TID);
+
+
     var u = new Unpack(p.getBuffer());
     var TID = MAX+':Unpack';
     console.time(TID);
     for(var i=0; i<MAX; ++i){
         var num = u.pop_int32();
         assert(num === i);
+    }
+    console.timeEnd(TID);
+},
+function(MAX){
+    var mydata = new MyData();
+    mydata.hoge = 1024; 
+    mydata.fuga = 'hogehogemogamoga';
+    mydata.piyo = [1,2,3,4,5];
+
+    var p = new Pack(10240000);
+    var TID = MAX+':Pack';
+    console.time(TID);
+    for(var i=0; i<MAX; ++i){
+        p.push_mydata(mydata);
+    }
+    console.timeEnd(TID);
+    var u = new Unpack(p.copy());
+    var TID = MAX+':Unpack';
+    console.time(TID);
+    for(var i=0; i<MAX; ++i){
+        var w = u.pop_mydata();
+        assert(w.hoge === mydata.hoge);
     }
     console.timeEnd(TID);
 }
