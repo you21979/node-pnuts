@@ -7,8 +7,14 @@ var PNuts = require('..'),
 var assert = require('assert');
 
 [
-function(){
-/*
+function(MAX){
+    var copy = new BitArray(MAX);
+    for(var i=0;i<MAX;++i){
+        copy.set(i);
+        copy.clear(i);
+    }
+},
+function(MAX){
     var flags = new BitArray(1000);
     assert(flags.check(1000) === false);//フラグ数オーバー
     assert(flags.get(100) === false);
@@ -25,22 +31,12 @@ function(){
     copy.fromString(flags.toString());
     assert(copy.get(999) === true);
     assert(flags.toString() === copy.toString());
-    console.log(copy.getArray());
-    copy.set(60);
-    copy.set(1);
-    console.log(copy.toString());
-*/
-    var MAX = 33;
-    var copy = new BitArray(MAX);
-    for(var i=0;i<MAX;++i){
-        copy.set(i);
-    }
-    console.log(copy.getArray());
-    console.log(copy.toString());
 }
 ].forEach(function(fnc){
-    var TID = 'SUM';
-    console.time(TID);
-    fnc();
-    console.timeEnd(TID);
+    [32,1024,65535].forEach(function(MAX){
+        var TID = MAX+':SUM';
+        console.time(TID);
+        fnc(MAX);
+        console.timeEnd(TID);
+    });
 });
