@@ -1,6 +1,3 @@
-//
-//  １０万件以上の削除が遅い
-//
 var PNuts = require('..'),
     BitArray = PNuts.util.BitArray;
 
