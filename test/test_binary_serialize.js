@@ -7,11 +7,21 @@ var MyData = function(){
     this.hoge = 0; 
     this.fuga = '';
     this.piyo = [];
+    this.count = 0;
 };
 
 var Pack = Binary.Serializer.extends({
     initialize : function(maxsize){
         Binary.Serializer.call(this,maxsize);
+    },
+    begin : function(){
+        this.push_int32(0);
+    },
+    end : function(){
+        var old = this.pos_;
+        this.pos_ = 0;
+        this.push_int32(old);
+        this.pos_ = old;
     },
     push_mydata : function(data){
         if(data instanceof MyData){
@@ -22,12 +32,16 @@ var Pack = Binary.Serializer.extends({
             for(var i = 0; i<len; ++i){
                 this.push_int8(data.piyo[i]);
             }
+            this.push_int32(data.count);
         }
     },
 });
 var Unpack = Binary.Deserializer.extends({
     initialize : function(buffer){
         Binary.Deserializer.call(this,buffer);
+    },
+    pop_header : function(){
+        return this.pop_int32();
     },
     pop_mydata : function(){
         var w = new MyData();
@@ -38,6 +52,7 @@ var Unpack = Binary.Deserializer.extends({
         for(var i = 0; i<len; ++i){
             w.piyo[i] = this.pop_int8();
         }
+        w.count = this.pop_int32();
         return w;
     },
 });
@@ -50,7 +65,6 @@ function(MAX){
         p.push_int32(i);
     }
     console.timeEnd(TID);
-
 
     var u = new Unpack(p.getBuffer());
     var TID = MAX+':Unpack';
@@ -66,17 +80,23 @@ function(MAX){
     mydata.hoge = 1024; 
     mydata.fuga = 'hogehogemogamoga';
     mydata.piyo = [1,2,3,4,5];
+    mydata.count = 0;
 
-    var p = new Pack(10240000);
+    var p = new Pack(5120000);
     var TID = MAX+':Pack';
     console.time(TID);
+    p.begin();
     for(var i=0; i<MAX; ++i){
+        ++mydata.count;
         p.push_mydata(mydata);
     }
+    p.end();
     console.timeEnd(TID);
-    var u = new Unpack(p.copy());
+    var u = new Unpack(p.getBuffer());
     var TID = MAX+':Unpack';
     console.time(TID);
+    var header = u.pop_header();
+    console.log('%s Byte',header);
     for(var i=0; i<MAX; ++i){
         var w = u.pop_mydata();
         assert(w.hoge === mydata.hoge);
