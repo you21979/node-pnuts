@@ -29,7 +29,9 @@ var C7 = Singleton(Complex7,{});
 
 [
 function(){
-    var x = {};
+    var x = {
+        aaa_ : 'test'
+    };
 },
 function(){
     var x = new Def();
