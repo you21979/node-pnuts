@@ -4,7 +4,7 @@ Penguins Network Utility ToolS
 
 What's Module
 -------------
-主にリアルタイム系サーバーを作るためのcommon library
+主にリアルタイム系サーバーを作るためのツール的なモジュール集  
 
 クラス
 ------
