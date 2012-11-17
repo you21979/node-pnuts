@@ -1,6 +1,6 @@
 node-pnuts
 ==========
-Penguins Network UtilitieS
+Penguins Network Utility ToolS
 
 What's Module
 -------------
