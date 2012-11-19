@@ -31,6 +31,24 @@ function(){
     assert(xx.aaa_ === 'test');
 },
 function(){
+    var mxHoge = {
+        Hoge : function(){
+            this.MMM = 'aaaaaa';
+        },
+        update : function(){
+            //console.log(this.MMM);
+        },
+    };
+    var Mixin = Class({
+        initialize : function(){
+            this.aaa_ = 'test';
+            this.Hoge();
+        },
+    }).mixin(mxHoge);
+    var x = new Mixin();
+    x.update();
+},
+function(){
     var Simple = Singleton({
         initialize : function(){
             this.x = 0;
