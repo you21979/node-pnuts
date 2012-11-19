@@ -8,6 +8,30 @@ var Def = function(){
     this.aaa_ = 'test';
 }
 
+var IHoge = {
+    Hoge : function(){},
+    Fuga : function(){},
+    Piyo : function(){},
+};
+var IMoga = {
+    Ugogo : function(){},
+};
+var Moga = {
+    Moga : function(p){
+        this.OOOOO = p;
+    },
+    Ugogo : function(){
+        console.log("UHOOOOOOOO");
+        console.log(this.OOOOO);
+    },
+};
+
+var Mix = Class({
+    initialize : function(){
+        this.bbb_ = 'test';
+        this.Moga("aaaaaaa");
+    },
+}).mixin(Moga);
 var Simple = Class({
     initialize : function(){
         this.aaa_ = 'test';
@@ -23,6 +47,13 @@ var Complex4 = Complex3.extends({});
 var Complex5 = Complex4.extends({});
 var Complex6 = Complex5.extends({});
 var Complex7 = Complex6.extends({});
+var InfTest = Simple.extends({
+    Hoge : function(){},
+    Fuga : function(){},
+    Piyo : function(){},
+    Ugogo : function(){},
+}).imprements(IHoge).imprements(IMoga);
+var InfFinal = InfTest.extends({}).imprements(IHoge);
 
 var S = Singleton(Simple,{});
 var C7 = Singleton(Complex7,{});
@@ -35,6 +66,9 @@ function(){
 },
 function(){
     var x = new Def();
+},
+function(){
+    var x = new Mix();
 },
 function(){
     var x = new Simple();
@@ -59,6 +93,12 @@ function(){
 },
 function(){
     var x = new Complex7();
+},
+function(){
+    var x = new InfTest();
+},
+function(){
+    var x = new InfFinal();
 },
 function(){
     var x = C7.get();
