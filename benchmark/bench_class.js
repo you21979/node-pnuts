@@ -52,8 +52,8 @@ var InfTest = Simple.extends({
     Fuga : function(){},
     Piyo : function(){},
     Ugogo : function(){},
-}).imprements(IHoge).imprements(IMoga);
-var InfFinal = InfTest.extends({}).imprements(IHoge);
+}).implements(IHoge).implements(IMoga);
+var InfFinal = InfTest.extends({}).implements(IHoge);
 
 var S = Singleton(Simple,{});
 var C7 = Singleton(Complex7,{});
