@@ -49,6 +49,39 @@ function(){
     x.update();
 },
 function(){
+    var Simple = Class({
+        initialize : function(){
+            this.aaa_ = 'test';
+        },
+        get : function(){
+            return this.aaa_;
+        },
+    });
+    var x = Simple.toSingleton();
+    x.initialize();
+    assert(x.instance.get() === 'test');
+},
+function(){
+    var s = Class({
+        initialize : function(a,b,c,d){
+            this.a = a;
+            this.b = b;
+            this.c = c;
+            this.d = d;
+        },
+    })
+    .extends({
+        get : function(){
+            return this.d;
+        },
+    })
+    .toSingleton();
+    s.initialize('a','b','c','d');
+    assert(s.instance.a === 'a');
+    assert(s.instance.b === 'b');
+    assert(s.instance.get() === 'd');
+},
+function(){
     var Simple = Singleton({
         initialize : function(){
             this.x = 0;
