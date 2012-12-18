@@ -1,5 +1,4 @@
 var PNuts = require('..'),
-    Singleton = PNuts.util.Singleton,
     Class = PNuts.Class;
 
 var assert = require('assert');
@@ -82,16 +81,16 @@ function(){
     assert(s.instance.get() === 'd');
 },
 function(){
-    var Simple = Singleton({
+    var Simple = Class({
         initialize : function(){
             this.x = 0;
             this.y = 2;
             this.z = 4;
         },
-    });
-    assert(Simple.get().x === 0);
-    assert(Simple.get().y === 2);
-    assert(Simple.get().z === 4);
+    }).toSingleton();
+    assert(Simple.instance.x === 0);
+    assert(Simple.instance.y === 2);
+    assert(Simple.instance.z === 4);
 
     var Simple2 = Class({
         initialize : function(){
@@ -100,10 +99,10 @@ function(){
             this.z = 4;
         },
     });
-    var Complex = Singleton(Simple2,{});
-    assert(Complex.get().x === 1);
-    assert(Complex.get().y === 2);
-    assert(Complex.get().z === 4);
+    var Complex = Simple2.extends({}).toSingleton();
+    assert(Complex.instance.x === 1);
+    assert(Complex.instance.y === 2);
+    assert(Complex.instance.z === 4);
 }
 ].forEach(function(fnc){
     var TID = 'SUM';
