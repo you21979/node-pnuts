@@ -1,5 +1,4 @@
 var PNuts = require('..'),
-    Singleton = PNuts.util.Singleton,
     Class = PNuts.Class;
 
 var assert = require('assert');
@@ -55,8 +54,8 @@ var InfTest = Simple.extends({
 }).implements(IHoge).implements(IMoga);
 var InfFinal = InfTest.extends({}).implements(IHoge);
 
-var S = Singleton(Simple,{});
-var C7 = Singleton(Complex7,{});
+var S = Simple.toSingleton();
+var C7 = Complex7.toSingleton();
 
 [
 function(){
@@ -101,10 +100,10 @@ function(){
     var x = new InfFinal();
 },
 function(){
-    var x = C7.get();
+    var x = C7.instance;
 },
 function(){
-    var x = S.get();
+    var x = S.instance;
 }
 ].forEach(function(fnc){
     var TID = 'SUM';
