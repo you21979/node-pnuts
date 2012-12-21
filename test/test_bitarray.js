@@ -28,6 +28,11 @@ function(MAX){
     copy.fromString(flags.toString());
     assert(copy.is(999) === true);
     assert(flags.toString() === copy.toString());
+    flags.on(998);
+    flags.on(997);
+    flags.on(996);
+    assert(flags.isAll([998,997,996]) === true);
+    assert(flags.isAll([998,997,995]) === false);
 }
 ].forEach(function(fnc){
     [32,1024,65535].forEach(function(MAX){
